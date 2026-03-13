@@ -103,19 +103,19 @@ box-shadow: #1F2937 0px 2px 4px;
 }
 
 /* Couleurs par type */
-.badge.fire     { background: #f97316; }
-.badge.water    { background: #3b82f6; }
-.badge.grass    { background: #22c55e; }
-.badge.poison   { background: #a855f7; }
-.badge.electric { background: #eab308; color: #333; }
+.badge.fire     { background: #a64f10; }
+.badge.water    { background: #2e69c8; }
+.badge.grass    { background: #38764e; }
+.badge.poison   { background: #702cb1; }
+.badge.electric { background: #a16207; color: #333; }
 .badge.psychic  { background: #ec4899; }
-.badge.ice      { background: #67e8f9; color: #333; }
+.badge.ice      { background: #0891b2; color: #333; }
 .badge.dragon   { background: #6366f1; }
 .badge.dark     { background: #374151; }
-.badge.fairy    { background: #f9a8d4; color: #333; }
+.badge.fairy    { background: #be185d; color: #333; }
 .badge.normal   { background: #9ca3af; }
 .badge.fighting { background: #b45309; }
-.badge.flying   { background: #7dd3fc; color: #333; }
+.badge.flying   { background: #0369a1; color: #333; }
 .badge.ground   { background: #d97706; }
 .badge.rock     { background: #78716c; }
 .badge.bug      { background: #84cc16; color: #333; }
@@ -148,7 +148,7 @@ box-shadow: #1F2937 0px 2px 4px;
 }
 
 #pagination button.active {
-  background: #6366f1;
+  background: #3d3f95;
   color: white;
 }
 
@@ -167,7 +167,7 @@ box-shadow: #1F2937 0px 2px 4px;
 #back-btn {
   background: none;
   border: none;
-  color: #6366f1;
+  color: #702cb1;
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
@@ -215,7 +215,7 @@ box-shadow: #1F2937 0px 2px 4px;
 
 .sprites p {
   font-size: 0.85rem;
-  color: #777;
+  color: black;
   margin-top: 4px;
 }
 
@@ -235,7 +235,7 @@ box-shadow: #1F2937 0px 2px 4px;
 
 .physical span.label {
   font-size: 0.8rem;
-  color: #888;
+  color: #59677a;
   display: block;
   margin-bottom: 4px;
 }
@@ -291,10 +291,12 @@ box-shadow: #1F2937 0px 2px 4px;
 /* Capacités */
 .ability-badge {
   display: inline-block;
-  background: #f1f5f9;
+  background: #F3E8FF;
+  color: #7E22CE;
   border-radius: 20px;
   padding: 6px 14px;
   font-size: 0.85rem;
+  font-weight: 600;
   margin-right: 8px;
   margin-bottom: 8px;
   border: 1px solid #e2e8f0;
@@ -302,8 +304,7 @@ box-shadow: #1F2937 0px 2px 4px;
 
 .ability-badge.hidden {
   display: inline-block !important;
-  color: #888;
-  font-style: italic;
+  color: #7E22CE;
 }
 
 /* Chaîne d'évolution */
@@ -322,11 +323,18 @@ box-shadow: #1F2937 0px 2px 4px;
   font-weight: 600;
   font-size: 0.9rem;
   background: #f1f5f9;
-  border: 2px solid transparent;
+  border: none;        /* ← retire la bordure native du bouton */
+  cursor: pointer;
+  font-family: inherit; /* ← hérite de la police du site */
+}
+
+.evo-name:focus-visible {
+  outline: 3px solid #6366f1;
+  outline-offset: 4px;
 }
 
 .evo-name.current {
-  background: #6366f1;
+  background: #702cb1       ;
   color: white;
 }
 

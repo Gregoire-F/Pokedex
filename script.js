@@ -5,12 +5,24 @@ let currentPage = 1;
 
 // ===== COULEURS PAR TYPE (pour les badges) =====
 const typeColors = {
-  fire: "#f97316", water: "#3b82f6", grass: "#22c55e",
-  poison: "#a855f7", electric: "#eab308", psychic: "#ec4899",
-  ice: "#67e8f9", dragon: "#6366f1", dark: "#374151",
-  fairy: "#f9a8d4", normal: "#9ca3af", fighting: "#b45309",
-  flying: "#7dd3fc", ground: "#d97706", rock: "#78716c",
-  bug: "#84cc16", ghost: "#7c3aed", steel: "#94a3b8"
+  fire: "#a64f10",
+  water: "#2e69c8",
+  grass: "#38764e",
+  poison: "#702cb1",
+  electric: "#a16207", 
+  psychic: "#ec4899",
+  ice: "#0891b2", 
+  dragon: "#6366f1",
+  dark: "#374151",
+  fairy: "#be185d", 
+  normal: "#373737",
+  fighting: "#b45309",
+  flying: "#0369a1", 
+  ground: "#d97706",
+  rock: "#78716c",
+  bug: "#4d7c0f",
+  ghost: "#7c3aed",
+  steel: "#94a3b8",
 };
 
 // ===== ÉLÉMENTS DU DOM =====
@@ -23,7 +35,8 @@ async function loadPokemon(page = 1) {
   const offset = (page - 1) * LIMIT;
 
   // Affiche un message de chargement
-  grid.innerHTML = "<p style='text-align:center; padding:40px; color:#888;'>Chargement...</p>";
+  grid.innerHTML =
+    "<p style='text-align:center; padding:40px; color:#888;'>Chargement...</p>";
 
   try {
     // Appel 1 : récupère la liste de 20 Pokémon
@@ -32,14 +45,14 @@ async function loadPokemon(page = 1) {
 
     // Appel 2 : pour chaque Pokémon, récupère ses détails en parallèle
     const pokemonList = await Promise.all(
-      data.results.map(p => fetch(p.url).then(r => r.json()))
+      data.results.map((p) => fetch(p.url).then((r) => r.json())),
     );
 
     renderGrid(pokemonList);
     renderPagination(page, Math.ceil(data.count / LIMIT));
-
   } catch (err) {
-    grid.innerHTML = "<p style='text-align:center; color:red;'>Erreur de chargement.</p>";
+    grid.innerHTML =
+      "<p style='text-align:center; color:red;'>Erreur de chargement.</p>";
     console.error(err);
   }
 }
@@ -48,23 +61,38 @@ async function loadPokemon(page = 1) {
 function renderGrid(pokemonList) {
   grid.innerHTML = "";
 
-  pokemonList.forEach(pokemon => {
+  pokemonList.forEach((pokemon) => {
     const id = String(pokemon.id).padStart(3, "0");
     const name = pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1);
     const sprite = pokemon.sprites.front_default;
-    const types = pokemon.types.map(t => t.type.name);
+    const types = pokemon.types.map((t) => t.type.name);
 
     const card = document.createElement("div");
     card.classList.add("card");
+    card.setAttribute("tabindex", "0");
+    card.setAttribute("role", "button");
+    card.setAttribute("aria-label", `Voir les détails de ${name}`);
+
+    // Navigation clavier : touche Entrée ou Espace = clic
+    card.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        showDetail(pokemon.name);
+      }
+    });
     card.innerHTML = `
       <img src="${sprite}" alt="${name}">
       <h3>#${id} ${name}</h3>
       <div class="badges">
-        ${types.map(t => `
-          <span class="badge" style="background:${typeColors[t] || '#999'}">
+        ${types
+          .map(
+            (t) => `
+          <span class="badge" style="background:${typeColors[t] || "#999"}">
             ${t.charAt(0).toUpperCase() + t.slice(1)}
           </span>
-        `).join("")}
+        `,
+          )
+          .join("")}
       </div>
     `;
 
@@ -128,7 +156,8 @@ async function showDetail(name) {
   grid.classList.add("hidden");
   pagination.classList.add("hidden");
   detailView.classList.remove("hidden");
-  detailView.innerHTML = "<p style='text-align:center; padding:40px; color:#888;'>Chargement...</p>";
+  detailView.innerHTML =
+    "<p style='text-align:center; padding:40px; color:#888;'>Chargement...</p>";
 
   try {
     // Appel 1 : données du Pokémon
@@ -145,9 +174,9 @@ async function showDetail(name) {
     const evoChain = parseEvoChain(evoData.chain);
 
     renderDetail(pokemon, evoChain);
-
   } catch (err) {
-    detailView.innerHTML = "<p style='text-align:center; color:red;'>Erreur de chargement.</p>";
+    detailView.innerHTML =
+      "<p style='text-align:center; color:red;'>Erreur de chargement.</p>";
     console.error(err);
   }
 }
@@ -169,22 +198,22 @@ function parseEvoChain(chain) {
 function renderDetail(pokemon, evoChain) {
   const id = String(pokemon.id).padStart(3, "0");
   const name = pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1);
-  const types = pokemon.types.map(t => t.type.name);
+  const types = pokemon.types.map((t) => t.type.name);
   const weight = (pokemon.weight / 10).toFixed(1);
   const height = (pokemon.height / 10).toFixed(1);
 
   const stats = [
-    { name: "HP",              value: pokemon.stats[0].base_stat },
-    { name: "Attaque",         value: pokemon.stats[1].base_stat },
-    { name: "Défense",         value: pokemon.stats[2].base_stat },
+    { name: "HP", value: pokemon.stats[0].base_stat },
+    { name: "Attaque", value: pokemon.stats[1].base_stat },
+    { name: "Défense", value: pokemon.stats[2].base_stat },
     { name: "Special-Attaque", value: pokemon.stats[3].base_stat },
     { name: "Special-Défense", value: pokemon.stats[4].base_stat },
-    { name: "Vitesse",         value: pokemon.stats[5].base_stat },
+    { name: "Vitesse", value: pokemon.stats[5].base_stat },
   ];
 
-  const abilities = pokemon.abilities.map(a => ({
+  const abilities = pokemon.abilities.map((a) => ({
     name: a.ability.name.charAt(0).toUpperCase() + a.ability.name.slice(1),
-    hidden: a.is_hidden
+    hidden: a.is_hidden,
   }));
 
   detailView.innerHTML = `
@@ -212,11 +241,15 @@ function renderDetail(pokemon, evoChain) {
 
       <!-- Badges de type -->
       <div class="badges" style="justify-content:center; margin-bottom:20px;">
-        ${types.map(t => `
-          <span class="badge" style="background:${typeColors[t] || '#999'}">
+        ${types
+          .map(
+            (t) => `
+          <span class="badge" style="background:${typeColors[t] || "#999"}">
             ${t.charAt(0).toUpperCase() + t.slice(1)}
           </span>
-        `).join("")}
+        `,
+          )
+          .join("")}
       </div>
 
       <!-- Informations physiques -->
@@ -234,7 +267,9 @@ function renderDetail(pokemon, evoChain) {
       <!-- Statistiques -->
       <div class="stats">
         <h3>Statistiques</h3>
-        ${stats.map(s => `
+        ${stats
+          .map(
+            (s) => `
           <div class="stat-row">
             <span class="stat-name">${s.name}</span>
             <div class="stat-bar-bg">
@@ -242,33 +277,42 @@ function renderDetail(pokemon, evoChain) {
             </div>
             <span class="stat-value">${s.value}</span>
           </div>
-        `).join("")}
+        `,
+          )
+          .join("")}
       </div>
 
       <!-- Capacités -->
       <div class="abilities-section">
         <h3>Capacités</h3>
-        ${abilities.map(a => `
-          <span class="ability-badge ${a.hidden ? 'hidden' : ''}">
-            ${a.name} ${a.hidden ? '<em>(Cachée)</em>' : ''}
+        ${abilities
+          .map(
+            (a) => `
+          <span class="ability-badge ${a.hidden ? "hidden" : ""}">
+            ${a.name} ${a.hidden ? "<em>(Cachée)</em>" : ""}
           </span>
-        `).join("")}
+        `,
+          )
+          .join("")}
       </div>
 
       <!-- Chaîne d'évolution -->
       <div class="evolution">
         <h3>Chaîne d'évolution</h3>
         <div class="evo-chain">
-          ${evoChain.map((evo, i) => `
-            ${i > 0 ? '<span class="evo-arrow">→</span>' : ''}
-            <span 
-              class="evo-name ${evo === pokemon.name ? 'current' : ''}"
-              onclick="showDetail('${evo}')"
-              style="cursor:pointer;"
-            >
-              ${evo.charAt(0).toUpperCase() + evo.slice(1)}
-            </span>
-          `).join("")}
+          ${evoChain
+            .map(
+              (evo, i) => `
+            ${i > 0 ? '<span class="evo-arrow">→</span>' : ""}
+          <button 
+            class="evo-name ${evo === pokemon.name ? "current" : ""}"
+            onclick="showDetail('${evo}')"
+          >
+            ${evo.charAt(0).toUpperCase() + evo.slice(1)}
+          </button>
+          `,
+            )
+            .join("")}
         </div>
       </div>
 
@@ -307,7 +351,8 @@ searchInput.addEventListener("input", () => {
 
 // ===== RECHERCHE D'UN POKÉMON =====
 async function searchPokemon(query) {
-  grid.innerHTML = "<p style='text-align:center; padding:40px; color:#888;'>Recherche en cours...</p>";
+  grid.innerHTML =
+    "<p style='text-align:center; padding:40px; color:#888;'>Recherche en cours...</p>";
   pagination.innerHTML = ""; // Cache la pagination pendant la recherche
 
   try {
@@ -327,9 +372,9 @@ async function searchPokemon(query) {
 
     const pokemon = await res.json();
     renderGrid([pokemon]); // On réutilise renderGrid avec un seul Pokémon
-
   } catch (err) {
-    grid.innerHTML = "<p style='text-align:center; color:red;'>Erreur lors de la recherche.</p>";
+    grid.innerHTML =
+      "<p style='text-align:center; color:red;'>Erreur lors de la recherche.</p>";
     console.error(err);
   }
 }
