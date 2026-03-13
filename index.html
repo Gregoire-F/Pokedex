@@ -1,16 +1,40 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles.css">
-    <title>Pokédex</title>
-</head>
-<body>
-    <header>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="styles.css" />
+    <title>Accueil</title>
+    <link
+      rel="icon"
+      type="image/png"
+      href="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png"
+    />
+  </head>
+  <body>
+    <main id="main-view">
+
+      <header>
         <h1>POKEDEX</h1>
         <p>Explorez la collection complète de Pokémon</p>
-        <input class="search-bar" type="text" placeholder="Rechercher un Pokémon..." id="search-input">
-    </header>
-</body>
+        <input
+          class="search-bar"
+          type="text"
+          placeholder="Rechercher un Pokémon..."
+          id="search-input"
+        />
+      </header>
+
+      <!-- Affichage de la grille de tous les résultats de Pokemon -->
+      <section id="pokemon-grid"></section>
+      <!-- Affichage dynamique des numéros de page -->
+        <div id="pagination"></div>
+      <!-- Affichage des détails d'un Pokémon spécifique hidden -->
+      <section id="detail-view" class="hidden"></section>
+
+
+
+    </main>
+    <script src="script.js"></script>
+  </body>
 </html>
