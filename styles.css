@@ -243,7 +243,7 @@ box-shadow: #1F2937 0px 2px 4px;
 .stats h3, .abilities-section h3, .evolution h3 {
   font-size: 1.1rem;
   font-weight: 700;
-  margin: 24px 0 12px;
+  margin: 24px 0 16px;
 }
 
 .stat-row {
@@ -343,8 +343,14 @@ box-shadow: #1F2937 0px 2px 4px;
 @media (max-width: 600px) {
   #pokemon-grid { grid-template-columns: repeat(2, 1fr); }
   header h1 { font-size: 2rem; }
+  .evo-chain {
+    flex-direction: column;
+  }
 }
 
 @media (max-width: 380px) {
   #pokemon-grid { grid-template-columns: 1fr; }
+  .evo-chain {
+    flex-direction: column;
+  }
 }
