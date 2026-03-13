@@ -24,12 +24,6 @@ header h1{
     margin-bottom: 10px;
 }   
 
-header p{
-    font-size: 20px;
-    color: #4B5563;
-    margin-top: 5px;
-}
-
 .search-container{
     margin: auto;
     max-width: 400px;
@@ -302,8 +296,7 @@ box-shadow: #1F2937 0px 2px 4px;
   border: 1px solid #e2e8f0;
 }
 
-.ability-badge.hidden {
-  display: inline-block !important;
+.ability-badge.is-hidden {
   color: #7E22CE;
 }
 

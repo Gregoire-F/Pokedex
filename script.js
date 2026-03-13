@@ -32,6 +32,7 @@ const searchInput = document.getElementById("search");
 
 // ===== FONCTION PRINCIPALE : charger une page =====
 async function loadPokemon(page = 1) {
+  currentPage = page; //Pour rester sur la page actuelle après une recherche effacée.
   const offset = (page - 1) * LIMIT;
 
   // Affiche un message de chargement
@@ -73,7 +74,7 @@ function renderGrid(pokemonList) {
     card.setAttribute("role", "button");
     card.setAttribute("aria-label", `Voir les détails de ${name}`);
 
-    // Navigation clavier : touche Entrée ou Espace = clic
+    // Navigation clavier pour l'accessibilité : touche Entrée ou Espace = clic
     card.addEventListener("keydown", (e) => {
       if (e.key === "Enter" || e.key === " ") {
         e.preventDefault();
@@ -142,7 +143,7 @@ function renderPagination(currentPage, totalPages) {
   pagination.appendChild(nextBtn);
 }
 
-// ===== LANCEMENT AU DÉMARRAGE =====
+// ===== Démarre à la page 1 =====
 loadPokemon(1);
 
 // ===== ÉLÉMENTS VUE DÉTAIL =====
@@ -152,7 +153,7 @@ const detailView = document.getElementById("detail-view");
 // ===== AFFICHER LE DÉTAIL =====
 async function showDetail(name) {
   // Bascule les vues: ne pas cacher `main-view` (contient `detail-view`),
-  // masquer plutôt la grille et la pagination pour afficher la vue détail.
+  // masque la grille et la pagination pour afficher la vue détail.
   grid.classList.add("hidden");
   pagination.classList.add("hidden");
   detailView.classList.remove("hidden");
@@ -181,14 +182,14 @@ async function showDetail(name) {
   }
 }
 
-// ===== PARSER LA CHAÎNE D'ÉVOLUTION =====
+// ===== PARSER LA CHAÎNE D'ÉVOLUTION pour transformer un tableau complexe en tableau simple à utiliser =====
 function parseEvoChain(chain) {
   const result = [];
   let current = chain;
 
   while (current) {
     result.push(current.species.name);
-    current = current.evolves_to[0]; // on prend la première évolution
+    current = current.evolves_to[0]; // je prends la première évolution
   }
 
   return result;
@@ -196,10 +197,12 @@ function parseEvoChain(chain) {
 
 // ===== AFFICHER LE DÉTAIL =====
 function renderDetail(pokemon, evoChain) {
-  const id = String(pokemon.id).padStart(3, "0");
-  const name = pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1);
-  const types = pokemon.types.map((t) => t.type.name);
-  const weight = (pokemon.weight / 10).toFixed(1);
+  const id = String(pokemon.id).padStart(3, "0"); 
+  //Sert à afficher les ID à 3 chiffres (ex: 001, 025). padStart ajoute des zéros devant le numéro (3 = valeur cible exemple: 001).
+  const name = pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1); 
+  // Met le nom en majuscule. Slice 1 découpe le nom à partir du 2ème caractère (ex: "pikachu" → "P" + "ikachu") et + rassemble les deux parties.
+  const types = pokemon.types.map((t) => t.type.name); // Extrait les types du Pokémon.
+  const weight = (pokemon.weight / 10).toFixed(1); // Convertit le poids en kg (l'API donne le poids en hectogrammes) et arrondit à 1 décimale.
   const height = (pokemon.height / 10).toFixed(1);
 
   const stats = [
@@ -264,7 +267,7 @@ function renderDetail(pokemon, evoChain) {
         </div>
       </div>
 
-      <!-- Statistiques -->
+      <!-- Statistiques (barre à 255 car la capacité maximale d'un Pokemon est de 255) -->
       <div class="stats">
         <h3>Statistiques</h3>
         ${stats
@@ -288,7 +291,7 @@ function renderDetail(pokemon, evoChain) {
         ${abilities
           .map(
             (a) => `
-          <span class="ability-badge ${a.hidden ? "hidden" : ""}">
+          <span class="ability-badge ${a.hidden ? "is-hidden" : ""}">
             ${a.name} ${a.hidden ? "<em>(Cachée)</em>" : ""}
           </span>
         `,
@@ -328,8 +331,9 @@ function goBack() {
   pagination.classList.remove("hidden");
 }
 // ===== BARRE DE RECHERCHE =====
-let searchTimeout = null;
+let searchTimeout = null; //Evite la surcharge de l'API en annulant les recherches précédentes si l'utilisateur tape vite
 
+//Convertit en minuscules et supprime les espaces inutiles
 searchInput.addEventListener("input", () => {
   const query = searchInput.value.trim().toLowerCase();
 
@@ -338,11 +342,11 @@ searchInput.addEventListener("input", () => {
 
   // Champ vide → retour à la liste normale
   if (query === "") {
-    loadPokemon(currentPage);
+    loadPokemon(currentPage); //Page 1
     return;
   }
 
-  // Petite pause de 400ms avant de lancer la recherche
+  // Pause de 400ms avant de lancer la recherche
   // (évite de spammer l'API à chaque lettre tapée)
   searchTimeout = setTimeout(() => {
     searchPokemon(query);
@@ -356,13 +360,13 @@ async function searchPokemon(query) {
   pagination.innerHTML = ""; // Cache la pagination pendant la recherche
 
   try {
-    const res = await fetch(`${API_URL}/${query}`);
+    const res = await fetch(`${API_URL}/${query}`); //API_BASE/nom tapé du pokemon dans la barre de recherche
 
     // Pokémon introuvable
     if (!res.ok) {
       grid.innerHTML = `
-        <div style="text-align:center; padding:60px; color:#888; grid-column: 1/-1;">
-          <p style="font-size:3rem;">OUPS...</p>
+        <div style="text-align:center; color:#888; grid-column: 1/-1;">
+          <p style="font-size:3rem;">J'ai pas trouvé !</p>
           <p style="font-size:1.1rem; margin-top:12px;">Aucun Pokémon trouvé pour "<strong>${query}</strong>"</p>
           <p style="font-size:0.9rem; margin-top:8px;">Vérifie l'orthographe ou essaie en anglais</p>
         </div>
@@ -370,11 +374,11 @@ async function searchPokemon(query) {
       return;
     }
 
-    const pokemon = await res.json();
+    const pokemon = await res.json(); // Convertit la réponse en JSON lisible
     renderGrid([pokemon]); // On réutilise renderGrid avec un seul Pokémon
   } catch (err) {
     grid.innerHTML =
-      "<p style='text-align:center; color:red;'>Erreur lors de la recherche.</p>";
+      "<p style='text-align:center; color:red; font-weight: bold; grid-column: 1 / -1;padding:40px;'>Erreur lors de la recherche.</p>";
     console.error(err);
   }
 }
