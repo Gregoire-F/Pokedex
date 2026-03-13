@@ -189,7 +189,9 @@ function renderDetail(pokemon, evoChain) {
 
   detailView.innerHTML = `
     <!-- Bouton retour -->
-    <button id="back-btn" onclick="goBack()">← Retour à la liste</button>
+    <div style="display:flex; justify-content:center">
+      <button id="back-btn" onclick="goBack()">← Retour à la liste</button>
+    </div>
 
     <div class="detail-card">
 
@@ -280,4 +282,54 @@ function goBack() {
   detailView.classList.add("hidden");
   grid.classList.remove("hidden");
   pagination.classList.remove("hidden");
+}
+// ===== BARRE DE RECHERCHE =====
+let searchTimeout = null;
+
+searchInput.addEventListener("input", () => {
+  const query = searchInput.value.trim().toLowerCase();
+
+  // Annule la recherche précédente si l'utilisateur tape vite
+  clearTimeout(searchTimeout);
+
+  // Champ vide → retour à la liste normale
+  if (query === "") {
+    loadPokemon(currentPage);
+    return;
+  }
+
+  // Petite pause de 400ms avant de lancer la recherche
+  // (évite de spammer l'API à chaque lettre tapée)
+  searchTimeout = setTimeout(() => {
+    searchPokemon(query);
+  }, 400);
+});
+
+// ===== RECHERCHE D'UN POKÉMON =====
+async function searchPokemon(query) {
+  grid.innerHTML = "<p style='text-align:center; padding:40px; color:#888;'>Recherche en cours...</p>";
+  pagination.innerHTML = ""; // Cache la pagination pendant la recherche
+
+  try {
+    const res = await fetch(`${API_URL}/${query}`);
+
+    // Pokémon introuvable
+    if (!res.ok) {
+      grid.innerHTML = `
+        <div style="text-align:center; padding:60px; color:#888; grid-column: 1/-1;">
+          <p style="font-size:3rem;">OUPS...</p>
+          <p style="font-size:1.1rem; margin-top:12px;">Aucun Pokémon trouvé pour "<strong>${query}</strong>"</p>
+          <p style="font-size:0.9rem; margin-top:8px;">Vérifie l'orthographe ou essaie en anglais</p>
+        </div>
+      `;
+      return;
+    }
+
+    const pokemon = await res.json();
+    renderGrid([pokemon]); // On réutilise renderGrid avec un seul Pokémon
+
+  } catch (err) {
+    grid.innerHTML = "<p style='text-align:center; color:red;'>Erreur lors de la recherche.</p>";
+    console.error(err);
+  }
 }
