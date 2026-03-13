@@ -7,6 +7,8 @@ Technologies utilisées : HTML, CSS, JavaScript. Figma pour les maquettes. Édit
 
 Lancement de l'application : Se rendre dans la barre de recherche et y intégrer l'URL : pagegithubici.io
 
+Le déploiement du site s'est fait par GitHub Pages qui permet de visualiser et de se servir le site avec toutes ses fonctionnalités. 
+
 Les fonctionnalités sont les suivantes : 
 
 - Rechercher un pokemon dans la barre de recherche du site.
@@ -31,4 +33,8 @@ Les difficultés rencontrées :
 1) Savoir où démarrer en JS
 Après avoir construit les fichiers de base html css et js, il fallait démarrer le JS pour appeler l'API dans les functions appropriés liés aux endpoints API. 
 
-J'ai donc regardé ce qui était demandé dans les consignes et commencé à savoir quelles seraient mes functions futures tel que charger la page d'accueil avec la grille des cards de Pokemon. Puis les Pokemons au detail grâce au système de card.
+-> Solution: 
+
+S'aider en regardant ce qui était demandé dans les consignes et commencer à savoir quelles seraient mes functions futures tel que charger la page d'accueil avec la grille des cards de Pokemon. Puis les Pokemons au detail grâce au système de card. La doc de l'API aide pour connaitre mes endpoints. 
+
+

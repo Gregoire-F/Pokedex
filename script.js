@@ -154,12 +154,14 @@ loadPokemon(1);
 // ===== ÉLÉMENTS VUE DÉTAIL =====
 const mainView = document.getElementById("main-view");
 const detailView = document.getElementById("detail-view");
+const header = document.querySelector("header");
 
 // ===== AFFICHER LE DÉTAIL =====
 async function showDetail(name) {
   // Bascule les vues: ne pas cacher `main-view` (contient `detail-view`),
   // masque la grille et la pagination pour afficher la vue détail.
   grid.classList.add("hidden");
+  header.classList.add("hidden");
   pagination.classList.add("hidden");
   detailView.classList.remove("hidden");
   detailView.innerHTML =
@@ -334,6 +336,7 @@ function goBack() {
   detailView.classList.add("hidden");
   grid.classList.remove("hidden");
   pagination.classList.remove("hidden");
+  header.classList.remove("hidden");
 }
 // ===== BARRE DE RECHERCHE =====
 let searchTimeout = null; //Evite la surcharge de l'API en annulant les recherches précédentes si l'utilisateur tape vite

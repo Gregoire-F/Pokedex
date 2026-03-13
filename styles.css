@@ -161,7 +161,7 @@ box-shadow: #1F2937 0px 2px 4px;
 #back-btn {
   background: none;
   border: none;
-  color: #702cb1;
+  color: #155DFC;
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
@@ -271,7 +271,7 @@ box-shadow: #1F2937 0px 2px 4px;
 .stat-bar {
   height: 100%;
   border-radius: 10px;
-  background: #6366f1;
+  background: #155DFC;
   transition: width 0.6s ease;
 }
 
@@ -322,12 +322,11 @@ box-shadow: #1F2937 0px 2px 4px;
 }
 
 .evo-name:focus-visible {
-  outline: 3px solid #6366f1;
-  outline-offset: 4px;
+  outline: 3px solid #1518d8;
 }
 
 .evo-name.current {
-  background: #702cb1       ;
+  background: #155dfc;
   color: white;
 }
 
