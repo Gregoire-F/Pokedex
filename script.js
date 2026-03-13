@@ -5,20 +5,20 @@ let currentPage = 1;
 
 // ===== COULEURS PAR TYPE (pour les badges) =====
 const typeColors = {
-  fire: "#a64f10",
+  fire: "#bb540a",
   water: "#2e69c8",
   grass: "#38764e",
   poison: "#702cb1",
-  electric: "#a16207", 
+  electric: "#a16207",
   psychic: "#ec4899",
-  ice: "#0891b2", 
+  ice: "#0891b2",
   dragon: "#6366f1",
   dark: "#374151",
-  fairy: "#be185d", 
-  normal: "#373737",
+  fairy: "#be185d",
+  normal: "#454545",
   fighting: "#b45309",
-  flying: "#0369a1", 
-  ground: "#d97706",
+  flying: "#0369a1",
+  ground: "#7f5729",
   rock: "#78716c",
   bug: "#4d7c0f",
   ghost: "#7c3aed",
@@ -32,21 +32,25 @@ const searchInput = document.getElementById("search");
 
 // ===== FONCTION PRINCIPALE : charger une page =====
 async function loadPokemon(page = 1) {
-  currentPage = page; //Pour rester sur la page actuelle après une recherche effacée.
-  const offset = (page - 1) * LIMIT;
+  currentPage = page; // Pour rester sur la page actuelle après une recherche effacée.
+  const offset = (page - 1) * LIMIT; 
+  // Calcul dynamique de l'offset en fonction de la page (ex: page 3 → offset = 40 car page 3 → (3-1) * 20 = 40).Donc affiche les pokemons du 41ème au 60ème.
 
   // Affiche un message de chargement
   grid.innerHTML =
     "<p style='text-align:center; padding:40px; color:#888;'>Chargement...</p>";
 
   try {
-    // Appel 1 : récupère la liste de 20 Pokémon
+    // Récupère la liste des 20 Pokemons
     const res = await fetch(`${API_URL}?limit=${LIMIT}&offset=${offset}`);
     const data = await res.json();
 
-    // Appel 2 : pour chaque Pokémon, récupère ses détails en parallèle
+    // Pour chaque Pokemon, récupère ses détails en parallèle, lance les fetch tous en même temps et attend que tous soient terminés (Promise.all)
     const pokemonList = await Promise.all(
-      data.results.map((p) => fetch(p.url).then((r) => r.json())),
+      data.results.map(async (pokemon) => {
+        const r = await fetch(pokemon.url);
+        return await r.json(); 
+      }),
     );
 
     renderGrid(pokemonList);
@@ -63,10 +67,11 @@ function renderGrid(pokemonList) {
   grid.innerHTML = "";
 
   pokemonList.forEach((pokemon) => {
-    const id = String(pokemon.id).padStart(3, "0");
-    const name = pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1);
-    const sprite = pokemon.sprites.front_default;
-    const types = pokemon.types.map((t) => t.type.name);
+    const id = String(pokemon.id).padStart(3, "0"); //Met l'ID à 3 chiffres (ex: 001)
+    const name = pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1); 
+    // Sépare la première lettre du nom, la met en majuscule, puis ajoute le reste du nom (ex: "pikachu" → "P" + "ikachu")
+    const sprite = pokemon.sprites.front_default; // Récupère l'URL du sprite (image) du Pokémon pour l'afficher sur la card
+    const types = pokemon.types.map((t) => t.type.name); // Récupère les types du Pokémon (ex: grass, poison) pour les afficher dans les badges de la card
 
     const card = document.createElement("div");
     card.classList.add("card");
@@ -197,9 +202,9 @@ function parseEvoChain(chain) {
 
 // ===== AFFICHER LE DÉTAIL =====
 function renderDetail(pokemon, evoChain) {
-  const id = String(pokemon.id).padStart(3, "0"); 
+  const id = String(pokemon.id).padStart(3, "0");
   //Sert à afficher les ID à 3 chiffres (ex: 001, 025). padStart ajoute des zéros devant le numéro (3 = valeur cible exemple: 001).
-  const name = pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1); 
+  const name = pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1);
   // Met le nom en majuscule. Slice 1 découpe le nom à partir du 2ème caractère (ex: "pikachu" → "P" + "ikachu") et + rassemble les deux parties.
   const types = pokemon.types.map((t) => t.type.name); // Extrait les types du Pokémon.
   const weight = (pokemon.weight / 10).toFixed(1); // Convertit le poids en kg (l'API donne le poids en hectogrammes) et arrondit à 1 décimale.
