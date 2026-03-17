@@ -11,7 +11,8 @@ Le déploiement du site s'est fait par GitHub Pages qui permet de visualiser et 
 
 Les fonctionnalités sont les suivantes : 
 
-- Rechercher un pokemon dans la barre de recherche du site.
+- Rechercher un pokemon dans la barre de recherche du site. Ne trouve le pokémon qu'avec son nom complet. 
+(Pas de "#" dans la recherche ni le numéro de pokémon associé ni un nom partiellement tapé).
 - Pouvoir consulter en détails les Pokemons en cliquant sur la carte du Pokemon. 
 - Naviguer au clavier si nécessaire est possible.
 

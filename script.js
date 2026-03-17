@@ -39,7 +39,7 @@ async function loadPokemon(page = 1) {
   // Affiche un message de chargement
   grid.innerHTML =
     "<p style='text-align:center; padding:40px; color:#888;'>Chargement...</p>";
-
+  
   try {
     // Récupère la liste des 20 Pokemons
     const res = await fetch(`${API_URL}?limit=${LIMIT}&offset=${offset}`);
@@ -374,7 +374,6 @@ async function searchPokemon(query) {
     if (!res.ok) {
       grid.innerHTML = `
         <div style="text-align:center; color:#888; grid-column: 1/-1;">
-          <p style="font-size:3rem;">J'ai pas trouvé !</p>
           <p style="font-size:1.1rem; margin-top:12px;">Aucun Pokémon trouvé pour "<strong>${query}</strong>"</p>
           <p style="font-size:0.9rem; margin-top:8px;">Vérifie l'orthographe ou essaie en anglais</p>
         </div>
