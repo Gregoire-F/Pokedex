@@ -2,6 +2,18 @@
 const API_URL = "https://pokeapi.co/api/v2/pokemon";
 const LIMIT = 20;
 let currentPage = 1;
+let allPokemonNames = []; // Stocke les 1350 noms de Pokémons pour une recherche instantanée sans faire de requête à chaque fois.
+
+// Charge les Pokemons pour faire les recherches instantanées.
+async function loadAllPokemonNames() {
+  try {
+    const res = await fetch(`${API_URL}?limit=10000`);//10000 pour être sur d'avoir tous les Pokémons.
+    const data = await res.json();
+    allPokemonNames = data.results.map((pokemon) => pokemon.name);
+  } catch (err) {
+    console.error("Impossible de charger la liste des Pokémons :", err);
+  }
+}
 
 // ===== COULEURS PAR TYPE (pour les badges) =====
 const typeColors = {
@@ -57,7 +69,7 @@ async function loadPokemon(page = 1) {
     renderPagination(page, Math.ceil(data.count / LIMIT));
   } catch (err) {
     grid.innerHTML =
-      "<p style='text-align:center; color:red;'>Erreur de chargement.</p>";
+      "<p style='text-align:center; color:red;'>Erreur de connexion, veuillez réessayer.</p>";
     console.error(err);
   }
 }
@@ -149,6 +161,7 @@ function renderPagination(currentPage, totalPages) {
 }
 
 // ===== Démarre à la page 1 =====
+loadAllPokemonNames(); // Charge les 1350 noms une seule fois
 loadPokemon(1);
 
 // ===== ÉLÉMENTS VUE DÉTAIL =====
@@ -184,7 +197,7 @@ async function showDetail(name) {
     renderDetail(pokemon, evoChain);
   } catch (err) {
     detailView.innerHTML =
-      "<p style='text-align:center; color:red;'>Erreur de chargement.</p>";
+      "<p style='text-align:center; color:red;'>Erreur de connexion, veuillez réessayer.</p>";
     console.error(err);
   }
 }
@@ -365,27 +378,34 @@ searchInput.addEventListener("input", () => {
 async function searchPokemon(query) {
   grid.innerHTML =
     "<p style='text-align:center; padding:40px; color:#888;'>Recherche en cours...</p>";
-  pagination.innerHTML = ""; // Cache la pagination pendant la recherche
+  pagination.innerHTML = "";
+
+  // Filtre sur les noms déjà en cache.
+  const matches = allPokemonNames.filter((name) => name.includes(query));
+
+  if (matches.length === 0) {
+    grid.innerHTML = `
+      <div style="text-align:center; color:#888; grid-column: 1/-1;">
+        <p style="font-size:1.1rem; margin-top:12px;">Aucun Pokémon trouvé pour "<strong>${query}</strong>"</p>
+        <p style="font-size:0.9rem; margin-top:8px;">Vérifie l'orthographe ou essaie en anglais</p>
+      </div>
+    `;
+    return;
+  }
 
   try {
-    const res = await fetch(`${API_URL}/${query}`); //API_BASE/nom tapé du pokemon dans la barre de recherche
+    // Limite à 20 résultats pour ne pas surcharger
+    const limited = matches.slice(0, 20);
 
-    // Pokémon introuvable
-    if (!res.ok) {
-      grid.innerHTML = `
-        <div style="text-align:center; color:#888; grid-column: 1/-1;">
-          <p style="font-size:1.1rem; margin-top:12px;">Aucun Pokémon trouvé pour "<strong>${query}</strong>"</p>
-          <p style="font-size:0.9rem; margin-top:8px;">Vérifie l'orthographe ou essaie en anglais</p>
-        </div>
-      `;
-      return;
-    }
+    // A chaque nom de Pokemon trouvé on envoie toutes les requêtes fetch. Promise.all attend que tous les fetch soient terminés pour continuer.
+    const pokemons = await Promise.all(
+      limited.map((name) => fetch(`${API_URL}/${name}`).then((r) => r.json()))
+    );
 
-    const pokemon = await res.json(); // Convertit la réponse en JSON lisible
-    renderGrid([pokemon]); // On réutilise renderGrid avec un seul Pokémon
+    renderGrid(pokemons);
   } catch (err) {
     grid.innerHTML =
-      "<p style='text-align:center; color:red; font-weight: bold; grid-column: 1 / -1;padding:40px;'>Erreur lors de la recherche.</p>";
+      "<p style='text-align:center; color:red; font-weight:bold; grid-column:1/-1; padding:40px;'>Erreur lors de la recherche.</p>";
     console.error(err);
   }
 }
