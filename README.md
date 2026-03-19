@@ -11,7 +11,7 @@ Le déploiement du site s'est fait par GitHub Pages qui permet de visualiser et 
 
 Les fonctionnalités sont les suivantes : 
 
-- Rechercher un pokemon dans la barre de recherche du site. Ne trouve le pokémon qu'avec son nom complet. 
+- Rechercher un pokemon dans la barre de recherche du site. Même partiellement tapé la recherche permettra de visualiser les Pokemons contenant les caractères tapés dans la barre de recherche. 
 (Pas de "#" dans la recherche ni le numéro de pokémon associé ni un nom partiellement tapé).
 - Pouvoir consulter en détails les Pokemons en cliquant sur la carte du Pokemon. 
 - Naviguer au clavier si nécessaire est possible.
@@ -32,10 +32,10 @@ Le clic sur une évolution emmène vers la carte du pokemon évolué.
 Les difficultés rencontrées : 
 
 1) Savoir où démarrer en JS
-Après avoir construit les fichiers de base html css et js, il fallait démarrer le JS pour appeler l'API dans les functions appropriés liés aux endpoints API. 
+Après avoir construit les fichiers de base html css et js, il fallait démarrer à structurer le JS. J'ai donc démarré avec la déclaration de l'API de base et réfléchi aux fonctions nécessaires pour le chargement des Pokemons. 
 
--> Solution: 
+-> Solution : 
 
-S'aider en regardant ce qui était demandé dans les consignes et commencer à savoir quelles seraient mes functions futures tel que charger la page d'accueil avec la grille des cards de Pokemon. Puis les Pokemons au detail grâce au système de card. La doc de l'API aide pour connaitre mes endpoints. 
+S'aider en regardant ce qui était demandé dans les consignes et commencer à savoir quelles seraient mes functions futures tel que charger la page d'accueil avec la grille des cards de Pokemon. Puis les Pokemons au detail grâce au système de card. J'ai aussi fait des recherches pour connaître les meilleurs façons de présenter la grid 
 
 
