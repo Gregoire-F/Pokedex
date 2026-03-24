@@ -38,4 +38,6 @@ Après avoir construit les fichiers de base html css et js, il fallait démarrer
 
 S'aider en regardant ce qui était demandé dans les consignes et commencer à savoir quelles seraient mes functions futures tel que charger la page d'accueil avec la grille des cards de Pokemon. Puis les Pokemons au detail grâce au système de card. J'ai aussi fait des recherches pour connaître les meilleurs façons de présenter la grid 
 
+2) Savoir rendre le site accessible 
+Grâce à mon expérience en entreprise très axé accessibilité sur les sites développés j'avais des outils comme Wave en extension de mon navigateur qui m'a permis d'ajuster les contrastes de mes textes et background-color. J'ai également cherché à rendre mon site navigable au clavier avec TAB et Entrée lorsque c'était nécessaire.
 

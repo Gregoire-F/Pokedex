@@ -361,7 +361,7 @@ searchInput.addEventListener("input", () => {
   // Annule la recherche précédente si l'utilisateur tape vite
   clearTimeout(searchTimeout);
 
-  // Champ vide → retour à la liste normale
+  // Champ vide = retour à la liste normale
   if (query === "") {
     loadPokemon(currentPage); //Page 1
     return;
