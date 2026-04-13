@@ -5,7 +5,7 @@ Créer une application web Pokedex permettant aux utilisateurs de parcourir, rec
 
 Technologies utilisées : HTML, CSS, JavaScript. Figma pour les maquettes. Éditeur de code : VSCode
 
-Lancement de l'application : Se rendre dans la barre de recherche et y intégrer l'URL : [pagegithubici.io](https://gregoire-f.github.io/Pokedex/)
+Lancement de l'application : Se rendre dans la barre de recherche et y intégrer l'URL : https://gregoire-f.github.io/Pokedex
 
 Le déploiement du site s'est fait par GitHub Pages qui permet de visualiser et de se servir le site avec toutes ses fonctionnalités. 
 
